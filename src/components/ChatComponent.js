@@ -15,8 +15,10 @@ const ChatComponent = () => {
   const [ chat, setChat ] = useState([]);
   const stompClient = useRef( null );
   const updateChatting = (ch) => {
-    setChat((prevChat) => prevChat.concat(ch));
+    setChat((prevChat) => prevChat.concat([ch]));
   };
+
+  const tagList = chat.map( (elem) => <div> { elem['content'] }</div> )
   
   const [ value, setValue ] = useState("");
 
@@ -27,6 +29,9 @@ const ChatComponent = () => {
     console.log('roomId', roomId );
   }, [])
 
+  useEffect( () => {
+    console.log( chat );
+  }, [chat ])
 
   const getChatList = async () =>{
 
@@ -51,8 +56,7 @@ const ChatComponent = () => {
       stompClient.current.subscribe( dest, function( response ){
         console.log('왔어!!!!', response.body );
         let obj = JSON.parse( response.body );
-        let tag = <div> {obj['content']}</div>
-      updateChatting( tag );
+      updateChatting( obj );
       })
     })
 
@@ -83,7 +87,7 @@ const ChatComponent = () => {
             <h2>하늘색 채팅방</h2>
         </div>
         <div className="chat-messages" id="chatMessages">
-          { chat }
+          { tagList }
         </div>
         <div className="chat-form">
             <input type="text" id="chatInput" placeholder="메시지를 입력하세요..." value={value} onChange={ onChangeInputValue }/>

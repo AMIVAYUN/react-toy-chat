@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 const ChatListComponent = () => {
+    //원래는 저장소써서 member 유지할테지만 지금 없으니깐 test로 작성했음. props 활용해서
+    let memberId;
     let navigate = useNavigate();
     const OpenChatRoom = ( roomId ) => {
-        navigate(`/room/${roomId}`);
+        navigate(`/room/${roomId}`, { 'state' : memberId });
     }
     useEffect( () => {
         loadChatList();
@@ -28,13 +30,16 @@ const ChatListComponent = () => {
 
         return value;
     }
-    const loadChatList = async () => {
-        const memberId = await getLoginTestMemberId();
+    const loadChatList = async (
 
+    ) => {
+        memberId = await getLoginTestMemberId();
+        console.log("memberId:", memberId)
         
         const url = `http://localhost:8080/room?id=${memberId}`
 
         axios.get( url,).then( res => {
+            console.log( res['data'])
             res['data'].forEach(element => {
                 let tag = <li class="chat-list-item" onClick={ () => { OpenChatRoom( element['chatRoomId'] )}}>${element['title']} 방장: ${element['member']['nickname']}</li>
                 console.log( tag );

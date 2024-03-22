@@ -34,11 +34,11 @@ const ChatComponent = () => {
   }, [chat ])
 
   const getChatList = async () =>{
-
-    const chatList = await axios.get( `http://localhost:8080/room/chat/${roomId['roomId']}`);
-    chatList['data'].forEach(element => {
-      updateChatting( element['content'])
-    });
+    const chatList = await axios.get( `http://localhost:8080/chat/room/detail/${roomId['roomId']}`);
+    console.log(chatList)
+    // chatList['data'].forEach(element => {
+    //   updateChatting( element['content'])
+    // });
     console.log( 'chat', chat );
     StompSetting();
   }
@@ -51,7 +51,7 @@ const ChatComponent = () => {
     stompClient.current= Stomp.over(socket);
     stompClient.current.connect({}, function( frame ){
       console.log("connected ", frame );
-      const dest = `/chat-room/1`;
+      const dest = `/chat-room-1`;
       console.log( dest );
       stompClient.current.subscribe( dest, function( response ){
         console.log('왔어!!!!', response.body );
@@ -67,11 +67,12 @@ const ChatComponent = () => {
   const send = () => {
     console.log( '보낼 메시지 ', value );
     console.log( 'stompClient', stompClient );
-    const dest = `/send/${roomId['roomId']}`;
+    const dest = `/chat/${roomId['roomId']}`;
     stompClient.current.send( dest, {},
       JSON.stringify(
         {
           memberId: state,
+          roomId: 1,
           content: value,
           type : 'message',
           fileId: undefined

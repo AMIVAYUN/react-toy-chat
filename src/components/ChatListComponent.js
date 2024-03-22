@@ -36,12 +36,12 @@ const ChatListComponent = () => {
         memberId = await getLoginTestMemberId();
         console.log("memberId:", memberId)
         
-        const url = `http://localhost:8080/room?id=${memberId}`
+        const url = `http://localhost:8080/chat/room?memberId=${memberId}`
 
         axios.get( url,).then( res => {
             console.log( res['data'])
             res['data'].forEach(element => {
-                let tag = <li class="chat-list-item" onClick={ () => { OpenChatRoom( element['chatRoomId'] )}}>${element['title']} 방장: ${element['member']['nickname']}</li>
+                let tag = <li class="chat-list-item" onClick={ () => { OpenChatRoom( element['chatRoomId'] )}}>${element['title']} 방장: ${element['nickname']}</li>
                 console.log( tag );
                 updateTagList( tag );
             });
